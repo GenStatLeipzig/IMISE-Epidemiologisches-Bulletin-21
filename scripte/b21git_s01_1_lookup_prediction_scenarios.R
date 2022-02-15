@@ -127,24 +127,15 @@ khcheck # veraltet
 
 observed_data2 = inccase[CountryExp =="Free State of Saxony"]
 observed_data2[, covid_inICU_upscaled := icu_sachsen[match_hk(observed_data2$DateRep %>% as.character(), icu_sachsen$DateRep%>% as.character()),`COVID-19 aktuell in Behandlung_upscaled`]]
-
-# observed_data[,mean:= NewConfCases]
-# observed_data2 = observed_data[DateRep >=as_date("2021-11-15") & Altersgruppe=="all"]
-# 
-# ggplot(observed_data2, aes(DateRep, NewConfCases7, col = Altersgruppe )) + geom_line()
-# 
-#               
+            
 # 
 normalstation = read_excel2(here("data/sachsen_kh_normalstation.xlsx"))
 normalstation
 
 observed_data2[,belegung_normalstation := normalstation[match_hk(observed_data2$DateRep %>% as.character(), normalstation$Datum %>% as.character()),Hospitalisiert]]
 observed_data2[, icu_plus_normal_belegung := belegung_normalstation + covid_inICU_upscaled ]
-# 
-# observed_data2[, .( DateRep,belegung_normalstation , covid_inICU_upscaled, icu_plus_normal_belegung) ]
-# 
 
-# WriteXLS_hk("hospitalized4marcin", here("results/b21_s5_2_hospitalized_saxony.xlsx"))
+
 # 
 observed_data2 = observed_data2[DateRep>= min(testpositives$DateRep)]
 setorder(observed_data2, DateRep)
