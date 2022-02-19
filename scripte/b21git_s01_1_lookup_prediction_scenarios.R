@@ -24,6 +24,10 @@ cumdead
 inccase = fread("https://raw.githubusercontent.com/KITmetricslab/covid19-forecast-hub-de/master/data-truth/RKI/truth_RKI-Incident%20Cases_Germany.csv", encoding = "UTF-8")
 inccase
 
+datenstand = max(inccase$date)
+datenstand
+
+
 # data.table(namex = unique(inccase$location_name), numix = unique(inccase$location)) %>% ccc
 setnames(inccase, c('date','location_name', "value"), c('DateRep','CountryExp',"NewConfCases"))
 setnames(cumdead, c('date','location_name', "value"), c('DateRep','CountryExp',"AllDeaths"))
@@ -132,6 +136,9 @@ observed_data2[, covid_inICU_upscaled := icu_sachsen[match_hk(observed_data2$Dat
 normalstation = read_excel2(here("data/sachsen_kh_normalstation.xlsx"))
 normalstation
 
+datenstandnormalstation  = max(normalstation$Datum)
+datenstandnormalstation
+
 observed_data2[,belegung_normalstation := normalstation[match_hk(observed_data2$DateRep %>% as.character(), normalstation$Datum %>% as.character()),Hospitalisiert]]
 observed_data2[, icu_plus_normal_belegung := belegung_normalstation + covid_inICU_upscaled ]
 
@@ -221,7 +228,7 @@ p_posit +guides(fill = 'none', col = "none") + p_bettenbelegung + p_totekumul + 
 
 
 jpeg(here("results/b21git_s01_1_scenarion_A_B_Cv2.jpeg"),width = 15,6, res = 150, quality= 100, units = "in")
-p_posit +guides(fill = 'none', col = "none") + p_bettenbelegung + p_totekumul + plot_layout(nrow = 1,guides = 'collect') & theme(legend.position = 'top')
+p_posit +guides(fill = 'none', col = "none") + p_bettenbelegung + p_totekumul + plot_layout(nrow = 1,guides = 'collect') + plot_annotation(caption =  paste0("Datenstand Inzidenz:", datenstand, "\n", "Datenstand Bettenbelegung:", datenstandnormalstation) %>% as.character)& theme(legend.position = 'top') 
 
 dev.off()
 
